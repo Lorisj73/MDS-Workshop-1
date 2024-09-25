@@ -1,9 +1,9 @@
-import FormulaireAcquereur from "@/components/form";
+import Chat from "@/components/chat";
 
 export default function Acquereur() {
 	return (
 		<div className="p-6">
-			<FormulaireAcquereur />
+			<Chat apiUrl="/api/chat/acquereur" />
 		</div>
 	);
 }

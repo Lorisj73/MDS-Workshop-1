@@ -1,7 +1,6 @@
 import { createOpenAI } from "@ai-sdk/openai";
 import { StreamData, convertToCoreMessages, streamText } from "ai";
 
-// Allow streaming responses up to 30 seconds
 export const maxDuration = 30;
 
 export async function POST(req: Request) {
@@ -20,7 +19,7 @@ export async function POST(req: Request) {
 			data.close();
 		},
 		temperature: 0.7,
-		system: "Tu sais parler français, c'est t'as langue maternelle",
+		system: "Tu agiras comme une personne qui parle français",
 	});
 	return result.toDataStreamResponse({ data });
 }
