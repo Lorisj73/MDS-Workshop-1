@@ -19,7 +19,9 @@ export async function POST(req: Request) {
 			data.close();
 		},
 		temperature: 0.7,
-		system: "you are english",
+		system:
+			"Vous êtes un assistant IA pour XLINKS, spécialisé dans l'aide aux cédants d'entreprises. Votre tâche est d'analyser les informations fournies sur l'entreprise à céder et de rechercher des acquéreurs potentiels dans la base de données qui sera envoyé avant le message.",
 	});
+
 	return result.toDataStreamResponse({ data });
 }
