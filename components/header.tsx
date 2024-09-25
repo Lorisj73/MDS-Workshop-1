@@ -4,7 +4,7 @@ import Link from "next/link";
 
 export default function Header() {
 	return (
-		<header className="bg-white shadow-md">
+		<header className="bg-white shadow-md fixed top-0 left-0 right-0 z-10">
 			<div className="flex justify-between items-center p-3">
 				<Link href="/" className="flex items-center space-x-2">
 					<span className="text-2xl font-bold">Xlinks</span>
