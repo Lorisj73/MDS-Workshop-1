@@ -13,7 +13,7 @@ export async function POST(req: Request) {
 	});
 
 	const result = await streamText({
-		model: groq("llama3-70b-8192"),
+		model: groq("llama-3.1-70b-versatile"),
 		messages: convertToCoreMessages(messages),
 		onFinish() {
 			data.close();

@@ -1,6 +1,8 @@
 "use client";
 
 import { useChat } from "ai/react";
+import { useEffect, useRef } from "react";
+
 interface ChatProps {
 	apiUrl: string;
 }
@@ -10,6 +12,16 @@ export default function Chat({ apiUrl }: ChatProps) {
 		api: apiUrl,
 	});
 
+	const messagesEndRef = useRef<HTMLDivElement>(null);
+
+	const scrollToBottom = () => {
+		messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+	};
+
+	useEffect(() => {
+		scrollToBottom();
+	}, [messages]);
+
 	const groupedMessages = [];
 	for (let i = 0; i < messages.length; i += 2) {
 		groupedMessages.push(messages.slice(i, i + 2));
@@ -17,23 +29,26 @@ export default function Chat({ apiUrl }: ChatProps) {
 
 	return (
 		<div className="flex flex-col w-full max-w-md py-20 mx-auto stretch">
-			{groupedMessages.map((group, index) => (
-				<div key={index} className="mb-4">
-					{group.map((m) => (
-						<div
-							key={m.id}
-							className={`whitespace-pre-wrap p-2 rounded ${
-								m.role === "user"
-									? "bg-gray-100 self-end ml-12 rounded-xl"
-									: " self-start "
-							}`}
-						>
-							{m.role === "user" ? "User: " : "Xlinks-AI: "}
-							{m.content}
-						</div>
-					))}
-				</div>
-			))}
+			<div className="flex-grow overflow-y-auto mb-20">
+				{groupedMessages.map((group, index) => (
+					<div key={index} className="mb-4">
+						{group.map((m) => (
+							<div
+								key={m.id}
+								className={`whitespace-pre-wrap p-2 rounded ${
+									m.role === "user"
+										? "bg-gray-100 self-end ml-12 rounded-xl"
+										: " self-start "
+								}`}
+							>
+								{m.role === "user" ? "User: " : "Xlinks-AI: "}
+								{m.content}
+							</div>
+						))}
+					</div>
+				))}
+				<div ref={messagesEndRef} />
+			</div>
 
 			<form
 				onSubmit={handleSubmit}
