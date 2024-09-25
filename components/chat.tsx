@@ -1,7 +1,10 @@
 "use client";
 
 import { useChat } from "ai/react";
-import { useEffect, useRef } from "react";
+import { Maximize, Minimize } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { remark } from "remark";
+import html from "remark-html";
 
 interface ChatProps {
 	apiUrl: string;
@@ -11,8 +14,9 @@ export default function Chat({ apiUrl }: ChatProps) {
 	const { messages, input, handleInputChange, handleSubmit } = useChat({
 		api: apiUrl,
 	});
-
+	const [formattedMessages, setFormattedMessages] = useState([]);
 	const messagesEndRef = useRef<HTMLDivElement>(null);
+	const [isFullScreen, setIsFullScreen] = useState(false);
 
 	const scrollToBottom = () => {
 		messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -20,36 +24,56 @@ export default function Chat({ apiUrl }: ChatProps) {
 
 	useEffect(() => {
 		scrollToBottom();
+
+		const processMessages = async () => {
+			const newFormattedMessages = await Promise.all(
+				messages.map(async (m) => {
+					const processedContent = await remark().use(html).process(m.content);
+					return {
+						...m,
+						htmlContent: processedContent.toString(),
+					};
+				}),
+			);
+			setFormattedMessages(newFormattedMessages);
+		};
+
+		processMessages();
 	}, [messages]);
 
-	const groupedMessages = [];
-	for (let i = 0; i < messages.length; i += 2) {
-		groupedMessages.push(messages.slice(i, i + 2));
-	}
+	const toggleFullScreen = () => {
+		setIsFullScreen(!isFullScreen);
+	};
 
 	return (
-		<div className="flex flex-col w-full max-w-md py-20 mx-auto stretch">
-			<div className="flex-grow overflow-y-auto mb-20">
-				{groupedMessages.map((group, index) => (
-					<div key={index} className="mb-4">
-						{group.map((m) => (
-							<div
-								key={m.id}
-								className={`whitespace-pre-wrap p-2 rounded ${
-									m.role === "user"
-										? "bg-gray-100 self-end ml-12 rounded-xl"
-										: " self-start "
-								}`}
-							>
-								{m.role === "user" ? "User: " : "Xlinks-AI: "}
-								{m.content}
+		<div className="items-center justify-center flex flex-col min-h-screen bg-white text-gray-900">
+			<div
+				className={`flex flex-col py-20 mx-auto stretch ${isFullScreen ? "w-full max-w-none" : "w-full max-w-md"}`}
+			>
+				<div className="flex-grow overflow-y-auto mb-20">
+					{formattedMessages.length === 0 ? (
+						<div className="text-center text-gray-500">
+							Aucun message pour le moment. Commencez à discuter !
+						</div>
+					) : (
+						formattedMessages.map((m, index) => (
+							<div key={index} className="mb-4">
+								<div
+									className={`whitespace-pre-wrap p-2 rounded ${
+										m.role === "user"
+											? "bg-gray-100 self-end ml-12 rounded-xl"
+											: " self-start "
+									}`}
+								>
+									{m.role === "user" ? "User: " : "Xlinks-AI: "}
+									<div dangerouslySetInnerHTML={{ __html: m.htmlContent }} />
+								</div>
 							</div>
-						))}
-					</div>
-				))}
-				<div ref={messagesEndRef} />
+						))
+					)}
+					<div ref={messagesEndRef} />
+				</div>
 			</div>
-
 			<form
 				onSubmit={handleSubmit}
 				className="fixed bottom-0 w-full max-w-xl p-4 mb-8 bg-[#f4f4f4] dark:bg-token-main-surface-secondary rounded-2xl flex items-center gap-2 border-0"
@@ -79,6 +103,16 @@ export default function Chat({ apiUrl }: ChatProps) {
 					</svg>
 				</button>
 			</form>
+			<button
+				onClick={toggleFullScreen}
+				className="fixed bottom-4 right-4 p-2 bg-gray-200 rounded-full hover:bg-gray-300 focus:outline-none"
+			>
+				{isFullScreen ? (
+					<Minimize className="h-6 w-6" />
+				) : (
+					<Maximize className="h-6 w-6" />
+				)}
+			</button>
 		</div>
 	);
 }
