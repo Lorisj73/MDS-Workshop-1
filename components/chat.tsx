@@ -11,11 +11,11 @@ interface ChatProps {
 }
 
 interface Message {
-	id: string;
-	role: 'user' | 'assistant'; // Changez 'assistant' en 'xlinks-ai' si c'est ce que vous utilisez
-	content: string;
-	htmlContent?: string; // Optionnel car on va le générer
-	// Ajoutez d'autres propriétés si nécessaire
+  id: string;
+  role: "user" | "assistant"; // Changez 'assistant' en 'xlinks-ai' si c'est ce que vous utilisez
+  content: string;
+  htmlContent?: string; // Optionnel car on va le générer
+  // Ajoutez d'autres propriétés si nécessaire
 }
 
 export default function Chat({ apiUrl }: ChatProps) {
@@ -41,7 +41,7 @@ export default function Chat({ apiUrl }: ChatProps) {
             ...m,
             htmlContent: processedContent.toString(),
           };
-        }),
+        })
       );
       setFormattedMessages(newFormattedMessages);
     };
@@ -81,7 +81,7 @@ export default function Chat({ apiUrl }: ChatProps) {
             formattedMessages.map((m, index) => (
               <div key={index} className="mb-4">
                 <div
-                  className={`whitespace-pre-wrap p-2 rounded ${
+                  className={`whitespace-pre-wrap chatbox-msg p-2 rounded ${
                     m.role === "user"
                       ? "bg-gray-100 self-end ml-12 rounded-xl"
                       : "self-start"
