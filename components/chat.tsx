@@ -1,7 +1,8 @@
 "use client";
 
+import { UpdateIcon } from "@radix-ui/react-icons";
 import { useChat } from "ai/react";
-import { Save } from "lucide-react";
+import { Delete, Edit, Pencil, Save, Trash2 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { remark } from "remark";
 import html from "remark-html";
@@ -92,12 +93,12 @@ export default function Chat({ apiUrl, tab }: ChatProps) {
 				const parts = lastMessage.content.split("|||");
 
 				if (parts.length > 1) {
-					const jsonPart = parts[1].trim();
+					const jsonPart = parts[1].trim(); // Cette partie récupère le JSON
 
 					try {
 						const data = JSON.parse(jsonPart);
 
-						// Update the table data
+						// Mise à jour des données du tableau
 						const newTableData = tableData.map((item) => ({
 							...item,
 							value:
@@ -162,12 +163,10 @@ export default function Chat({ apiUrl, tab }: ChatProps) {
 			>
 				{/* Chat messages */}
 				<div className="flex-grow overflow-y-auto mb-20 max-h-[calc(100vh-200px)]">
-					{formattedMessages.length === 0 ? (
-						<div className="text-center text-gray-500">
-							Aucun message pour le moment. Commencez à discuter !
-						</div>
-					) : (
-						formattedMessages.map((m, index) => (
+					{formattedMessages.map((m, index) => {
+						const contentWithoutJSON = m.htmlContent.split("|||")[0].trim();
+
+						return (
 							<div key={index} className="mb-4">
 								<div
 									className={`whitespace-pre-wrap chatbox-msg p-2 rounded ${
@@ -177,11 +176,13 @@ export default function Chat({ apiUrl, tab }: ChatProps) {
 									}`}
 								>
 									{m.role === "user" ? "User: " : "Xlinks-AI: "}
-									<div dangerouslySetInnerHTML={{ __html: m.htmlContent }} />
+									<div
+										dangerouslySetInnerHTML={{ __html: contentWithoutJSON }}
+									/>
 								</div>
 							</div>
-						))
-					)}
+						);
+					})}
 					<div ref={messagesEndRef} />
 				</div>
 
@@ -250,7 +251,11 @@ export default function Chat({ apiUrl, tab }: ChatProps) {
 							</tbody>
 						</table>
 					</div>
-					<div className="mt-4 text-center flex justify-center">
+					<div className="mt-4 text-center flex justify-center gap-4">
+						<Button className="flex gap-2" variant="secondary">
+							<Pencil />
+							Modifier
+						</Button>
 						<Button
 							onClick={handleSave}
 							className="flex gap-2"
@@ -258,6 +263,10 @@ export default function Chat({ apiUrl, tab }: ChatProps) {
 						>
 							<Save />
 							Enregistrer
+						</Button>
+						<Button className="flex gap-2" variant="destructive">
+							<Trash2 />
+							Supprimer
 						</Button>
 					</div>
 				</div>
