@@ -10,6 +10,14 @@ interface ChatProps {
   apiUrl: string;
 }
 
+interface Message {
+	id: string;
+	role: 'user' | 'assistant'; // Changez 'assistant' en 'xlinks-ai' si c'est ce que vous utilisez
+	content: string;
+	htmlContent?: string; // Optionnel car on va le générer
+	// Ajoutez d'autres propriétés si nécessaire
+}
+
 export default function Chat({ apiUrl }: ChatProps) {
   const { messages, input, handleInputChange, handleSubmit } = useChat({
     api: apiUrl,
