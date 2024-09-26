@@ -13,7 +13,7 @@ export default function Header() {
         <Link href="/" className="flex items-center space-x-2">
           <span className="text-2xl font-bold">Xlinks</span>
         </Link>
-        <nav className="flex space-x-4 mx-auto">
+        <nav className="flex space-x-4 mx-auto flex-grow justify-center">
           <Link
             href="/"
             className={`group flex items-center px-2 py-2 text-base font-medium rounded-md ${
