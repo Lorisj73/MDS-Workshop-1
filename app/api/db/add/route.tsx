@@ -1,13 +1,20 @@
+import path from "node:path";
 import { NextResponse } from "next/server";
 import sqlite3 from "sqlite3";
 
+const dbPath = path.resolve(process.cwd(), "db", "base.db");
+
 export async function POST(req: Request) {
-	const data = await req.json(); // Récupère le JSON envoyé par le client
+	const data = await req.json();
 
 	// Connexion à la base de données SQLite
-	const db = new sqlite3.Database("./base.db", (err) => {
+	const db = new sqlite3.Database(dbPath, (err) => {
 		if (err) {
 			console.error("Erreur lors de l'ouverture de la base de données :", err);
+			return NextResponse.json(
+				{ error: "Erreur lors de l'ouverture de la base de données" },
+				{ status: 500 },
+			);
 		}
 	});
 
@@ -44,21 +51,17 @@ export async function POST(req: Request) {
 				db.close(); // Fermer la base de données
 
 				if (err) {
+					console.error("Erreur lors de l'insertion des données :", err);
 					reject(
-						new NextResponse(
-							JSON.stringify({
-								error: "Erreur lors de l'insertion des données",
-							}),
+						NextResponse.json(
+							{ error: "Erreur lors de l'insertion des données" },
 							{ status: 500 },
 						),
 					);
 				} else {
 					resolve(
-						new NextResponse(
-							JSON.stringify({
-								message: "Données insérées avec succès",
-								id: this.lastID,
-							}),
+						NextResponse.json(
+							{ message: "Données insérées avec succès", id: this.lastID },
 							{ status: 200 },
 						),
 					);
