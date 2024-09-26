@@ -10,11 +10,19 @@ interface ChatProps {
 	apiUrl: string;
 }
 
+interface Message {
+	id: string;
+	role: 'user' | 'assistant'; // Changez 'assistant' en 'xlinks-ai' si c'est ce que vous utilisez
+	content: string;
+	htmlContent?: string; // Optionnel car on va le générer
+	// Ajoutez d'autres propriétés si nécessaire
+}
+
 export default function Chat({ apiUrl }: ChatProps) {
 	const { messages, input, handleInputChange, handleSubmit } = useChat({
 		api: apiUrl,
 	});
-	const [formattedMessages, setFormattedMessages] = useState([]);
+	const [formattedMessages, setFormattedMessages] = useState<Message[]>([]); // Spécifiez le type ici
 	const messagesEndRef = useRef<HTMLDivElement>(null);
 	const [isFullScreen, setIsFullScreen] = useState(false);
 
@@ -35,7 +43,7 @@ export default function Chat({ apiUrl }: ChatProps) {
 					};
 				}),
 			);
-			setFormattedMessages(newFormattedMessages);
+			setFormattedMessages(newFormattedMessages as Message[]); // Cast pour le bon type
 		};
 
 		processMessages();
@@ -57,16 +65,15 @@ export default function Chat({ apiUrl }: ChatProps) {
 						</div>
 					) : (
 						formattedMessages.map((m, index) => (
-							<div key={index} className="mb-4">
+							<div key={m.id} className="mb-4"> {/* Utilisez l'id comme clé */}
 								<div
-									className={`whitespace-pre-wrap p-2 rounded ${
-										m.role === "user"
-											? "bg-gray-100 self-end ml-12 rounded-xl"
-											: " self-start "
-									}`}
+									className={`whitespace-pre-wrap p-2 chatbox-msg ${m.role === "user"
+										? "bg-gray-100 self-end ml-12 rounded-xl"
+										: "self-start"
+										}`}
 								>
 									{m.role === "user" ? "User: " : "Xlinks-AI: "}
-									<div dangerouslySetInnerHTML={{ __html: m.htmlContent }} />
+									<div dangerouslySetInnerHTML={{ __html: m.htmlContent || "" }} />
 								</div>
 							</div>
 						))

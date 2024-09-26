@@ -76,3 +76,75 @@ body {
     @apply bg-background text-foreground;
   }
 }
+
+@layer components {
+  /* Styles pour les titres h1 à h6 */
+  .chatbox-msg h1 {
+    @apply text-3xl font-bold text-gray-900 mb-4;
+  }
+
+  .chatbox-msg h2 {
+    @apply text-2xl font-bold text-gray-800 mb-3;
+  }
+
+  .chatbox-msg h3 {
+    @apply text-xl font-semibold text-gray-700 mb-2;
+  }
+
+  .chatbox-msg h4 {
+    @apply text-lg font-semibold text-gray-600 mb-2;
+  }
+
+  .chatbox-msg h5 {
+    @apply text-base font-medium text-gray-500 mb-1;
+  }
+
+  .chatbox-msg h6 {
+    @apply text-sm font-medium text-gray-400 mb-1;
+  }
+
+  /* Styles pour les balises <code> */
+  .chatbox-msg code {
+    @apply bg-gray-100 text-red-500 font-mono px-2 py-1 rounded;
+  }
+
+  /* Styles pour les listes non ordonnées <ul> */
+  .chatbox-msg ul {
+    @apply list-disc pl-6 mb-4;
+  }
+
+  /* Styles pour les éléments de liste <li> */
+  .chatbox-msg li {
+    @apply mb-2 text-gray-700;
+  }
+
+  /* Styles pour les liens <a> */
+  .chatbox-msg a {
+    @apply text-blue-500 hover:underline;
+  }
+
+  /* Styles pour les balises <strong> */
+  .chatbox-msg strong {
+    @apply font-bold;
+  }
+
+  /* Styles pour les balises <em> (italique) */
+  .chatbox-msg em {
+    @apply italic;
+  }
+
+  /* Styles pour les blockquotes */
+  .chatbox-msg blockquote {
+    @apply border-l-4 border-gray-300 pl-4 italic text-gray-600 mb-4;
+  }
+
+  /* Styles pour les paragraphes */
+  .chatbox-msg p {
+    @apply mb-4 text-gray-700;
+  }
+
+  /* Styles pour les balises <pre> (bloc de code) */
+  .chatbox-msg pre {
+    @apply bg-gray-100 p-4 rounded-md overflow-x-auto;
+  }
+}
