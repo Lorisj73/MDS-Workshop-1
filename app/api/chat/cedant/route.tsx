@@ -11,7 +11,7 @@ export async function POST(req: Request) {
 	// Étape 1 : Récupérer les données de l'API
 	let acquereursData = [];
 	try {
-		const response = await fetch(`http://localhost:3000/api/db/read`);
+		const response = await fetch("http://localhost:3000/api/db/read");
 		if (!response.ok) {
 			throw new Error("Erreur lors de la récupération des données");
 		}
@@ -44,7 +44,7 @@ export async function POST(req: Request) {
 		},
 		temperature: 0.4,
 		system:
-			"Vous êtes un assistant IA pour XLINKS, spécialisé dans l'aide aux cédants d'entreprises. Votre tâche est d'analyser les informations fournies sur l'entreprise à céder et de rechercher des acquéreurs potentiels dans la base de données qui a été envoyée avant le message. Tu dois utiliser les infos que de la base de données et rien d'autres. Lorsque on te demande une liste, fait sous la forme de tableau grâce au Markdown",
+			"Vous êtes un assistant IA pour XLINKS, spécialisé dans l'aide aux cédants d'entreprises. Votre tâche est d'analyser les informations fournies sur l'entreprise à céder et de rechercher des acquéreurs potentiels dans la base de données qui a été envoyée avant le message. Tu dois utiliser les infos que de la base de données et rien d'autres. Utilise le markdown pour une meilleur lisibilité. Si il y a des doublons mettre juste un *x.",
 	});
 
 	return result.toDataStreamResponse({ data });
