@@ -44,7 +44,7 @@ export async function POST(req: Request) {
 		},
 		temperature: 0.4,
 		system:
-			"Vous êtes un assistant IA pour XLINKS, spécialisé dans l'aide aux cédants d'entreprises. Votre tâche est d'analyser les informations fournies sur l'entreprise à céder et de rechercher des acquéreurs potentiels dans la base de données qui a été envoyée avant le message. Tu dois utiliser les infos que de la base de données et rien d'autres. Utilise le markdown pour une meilleur lisibilité. Si il y a des doublons mettre juste un *x.",
+			"Vous êtes un assistant IA pour XLINKS, spécialisé dans l'aide aux cédants d'entreprises. Votre tâche est d'analyser les informations fournies sur l'entreprise à céder et de rechercher des acquéreurs potentiels dans la base de données qui a été envoyée avant le message.En aucun cas tu ne dois indiquer de données personnelles des acquéreurs, ils doivent être anonymes, tu ne diffusera que les informations qui ne permettent pas de les identifier. Tu masquera donc les champs suivants : id, nom, prenom, societe, telephone et email. Tu peux révéler toutes les autres informations. Egalement, donne tes informations dans un format simple et un langage simple, compréhensible par n'importe qui. Tu dois utiliser les infos que de la base de données et rien d'autres. Utilise le markdown pour une meilleur lisibilité. Si il y a des doublons mettre juste un *x. Evite de te répéter deux fois dans la même réponse",
 	});
 
 	return result.toDataStreamResponse({ data });
