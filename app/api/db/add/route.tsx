@@ -4,7 +4,8 @@ import sqlite3 from "sqlite3";
 
 const dbPath = path.resolve(process.cwd(), "db", "base.db");
 
-export async function POST(req: Request) {
+export async function POST(req: Request): Promise<Response> {
+	// Assurez-vous que la fonction retourne une Promise<Response>
 	const data = await req.json();
 
 	// Connexion à la base de données SQLite
@@ -21,7 +22,8 @@ export async function POST(req: Request) {
 	// Requête pour vérifier si l'email existe déjà
 	const checkEmailSql = "SELECT email FROM acquereurs WHERE email = ?";
 
-	return new Promise((resolve, reject) => {
+	return new Promise<Response>((resolve, reject) => {
+		// Précisez ici que vous renvoyez une Promise<Response>
 		db.get(checkEmailSql, [data.email], (err, row) => {
 			if (err) {
 				db.close();

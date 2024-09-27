@@ -1,5 +1,6 @@
 "use client";
 
+import type { Attachment, ToolInvocation } from "ai";
 import { useChat } from "ai/react";
 import { Pencil, Save, Trash2 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
@@ -23,7 +24,21 @@ export default function Chat({ apiUrl, tab }: ChatProps) {
 	const { messages, input, handleInputChange, handleSubmit } = useChat({
 		api: apiUrl,
 	});
-	const [formattedMessages, setFormattedMessages] = useState([]);
+	interface FormattedMessage {
+		role: string;
+		htmlContent: string;
+		id: string;
+		createdAt?: Date;
+		content: string;
+		experimental_attachments?: Attachment[];
+		tool_call_id?: string;
+		ui?: string | JSX.Element | JSX.Element[] | null;
+		toolInvocations?: ToolInvocation[];
+	}
+
+	const [formattedMessages, setFormattedMessages] = useState<
+		FormattedMessage[]
+	>([]);
 	const messagesEndRef = useRef<HTMLDivElement>(null);
 	const [isEditing, setIsEditing] = useState(false); // État pour gérer le mode d'édition
 	const [tableData, setTableData] = useState<TableData[]>([
@@ -129,10 +144,13 @@ export default function Chat({ apiUrl, tab }: ChatProps) {
 			return;
 		}
 
-		const dataToSend = tableData.reduce((acc, item) => {
-			acc[item.key] = item.value;
-			return acc;
-		}, {});
+		const dataToSend = tableData.reduce(
+			(acc: { [key: string]: string }, item) => {
+				acc[item.key] = item.value;
+				return acc;
+			},
+			{},
+		);
 
 		try {
 			const response = await fetch("/api/db/add", {

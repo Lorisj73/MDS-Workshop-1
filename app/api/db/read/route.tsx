@@ -4,8 +4,10 @@ import sqlite3 from "sqlite3";
 
 const dbPath = path.resolve(process.cwd(), "db", "base.db");
 
-export async function GET() {
-	return new Promise((resolve, reject) => {
+export async function GET(): Promise<Response> {
+	// Spécifiez que la fonction retourne Promise<Response>
+	return new Promise<Response>((resolve, reject) => {
+		// Précisez ici que vous renvoyez une Promise<Response>
 		// Connexion à la base de données SQLite
 		const db = new sqlite3.Database(dbPath, (err) => {
 			if (err) {
