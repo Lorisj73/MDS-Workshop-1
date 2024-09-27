@@ -1,8 +1,7 @@
 "use client";
 
-import { UpdateIcon } from "@radix-ui/react-icons";
 import { useChat } from "ai/react";
-import { Delete, Edit, Pencil, Save, Trash2 } from "lucide-react";
+import { Pencil, Save, Trash2 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { remark } from "remark";
 import html from "remark-html";
@@ -26,6 +25,7 @@ export default function Chat({ apiUrl, tab }: ChatProps) {
 	});
 	const [formattedMessages, setFormattedMessages] = useState([]);
 	const messagesEndRef = useRef<HTMLDivElement>(null);
+	const [isEditing, setIsEditing] = useState(false); // État pour gérer le mode d'édition
 	const [tableData, setTableData] = useState<TableData[]>([
 		{ label: "Nom", value: "", key: "nom", required: true },
 		{ label: "Prénom", value: "", key: "prenom", required: true },
@@ -144,14 +144,32 @@ export default function Chat({ apiUrl, tab }: ChatProps) {
 			});
 
 			if (response.ok) {
-				console.log("Données envoyées avec succès :", dataToSend);
 				alert("Données enregistrées avec succès !");
 			} else {
 				throw new Error("Erreur lors de l'envoi des données");
 			}
 		} catch (error) {
 			console.error("Erreur lors de l'envoi des données :", error);
-			alert("Erreur lors de l'enregistrement des données. Veuillez réessayer.");
+			alert("Erreur lors de l'enregistrement des données.");
+		}
+	};
+
+	// Fonction pour gérer le changement de valeur dans les champs d'entrée
+	const handleInputChangeTable = (key: string, value: string) => {
+		setTableData((prevData) =>
+			prevData.map((item) => (item.key === key ? { ...item, value } : item)),
+		);
+	};
+
+	const handleDelete = () => {
+		if (
+			window.confirm("Êtes-vous sûr de vouloir effacer toutes les données ?")
+		) {
+			// Réinitialise les données du tableau
+			setTableData((prevData) =>
+				prevData.map((item) => ({ ...item, value: "" })),
+			);
+			alert("Les données ont été effacées.");
 		}
 	};
 
@@ -188,7 +206,7 @@ export default function Chat({ apiUrl, tab }: ChatProps) {
 				{/* Input form */}
 				<div
 					className={`fixed bottom-0 ${
-						tab ? "left-[15%]" : "left-1/2 transform -translate-x-1/2"
+						tab ? "left-[18%]" : "left-1/2 transform -translate-x-1/2"
 					} w-2/3 max-w-3xl mb-8`}
 				>
 					<form
@@ -244,29 +262,51 @@ export default function Chat({ apiUrl, tab }: ChatProps) {
 											{item.label}
 											{item.required && <span className="text-red-500">*</span>}
 										</td>
-										<td className="px-4 py-2">{item.value}</td>
+										<td className="px-4 py-2">
+											{isEditing ? (
+												<input
+													type="text"
+													value={item.value}
+													onChange={(e) =>
+														handleInputChangeTable(item.key, e.target.value)
+													}
+													className="border border-gray-300 p-1 rounded"
+												/>
+											) : (
+												<span>{item.value || "N/A"}</span>
+											)}
+										</td>
 									</tr>
 								))}
 							</tbody>
 						</table>
-					</div>
-					<div className="mt-4 flex flex-wrap justify-center gap-4">
-						<Button className="flex gap-2" variant="secondary">
-							<Pencil className="w-4 h-4" />
-							Modifier
-						</Button>
-						<Button
-							onClick={handleSave}
-							className="flex gap-2"
-							disabled={!isFormValid()}
-						>
-							<Save className="w-4 h-4" />
-							Enregistrer
-						</Button>
-						<Button className="flex gap-2" variant="destructive">
-							<Trash2 className="w-4 h-4" />
-							Supprimer
-						</Button>
+						<div className="p-4 flex justify-between">
+							<Button
+								onClick={() => setIsEditing((prev) => !prev)}
+								variant={"secondary"}
+							>
+								{isEditing ? (
+									<Save className="mr-2" />
+								) : (
+									<Pencil className="mr-2" />
+								)}
+								{isEditing ? "Enregistrer" : "Modifier"}
+							</Button>
+							{!isEditing && (
+								<Button onClick={handleSave}>
+									<Save className="mr-2" />
+									Enregistrer
+								</Button>
+							)}
+							<Button
+								className="flex gap-2"
+								variant="destructive"
+								onClick={handleDelete}
+							>
+								<Trash2 className="w-4 h-4" />
+								Effacer
+							</Button>
+						</div>
 					</div>
 				</div>
 			)}
