@@ -20,17 +20,20 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-white text-gray-900 flex flex-col relative overflow-hidden pt-16"> {/* Added pt-16 to account for header height */}
+    <div className="min-h-screen bg-white text-gray-900 flex flex-col relative overflow-hidden pt-16">
+      {" "}
+      {/* Added pt-16 to account for header height */}
       {/* Subtle background animation */}
       <div
-        className="absolute inset-0 opacity-10"
+        className="absolute inset-0 opacity-40"
         style={{
           background: `radial-gradient(circle at ${mousePosition.x}px ${mousePosition.y}px, rgba(0, 0, 0, 0.15) 0%, rgba(0, 0, 0, 0) 50%)`,
           transition: "background 0.3s ease",
         }}
       />
-
-      <main className="flex-grow flex items-center z-0"> {/* Changed z-10 to z-0 */}
+      <main className="flex-grow flex items-center z-0">
+        {" "}
+        {/* Changed z-10 to z-0 */}
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-4xl sm:text-5xl font-extrabold mb-6 text-gray-900">
             Facilitez vos transactions d'entreprises
@@ -83,8 +86,9 @@ export default function Home() {
           </div>
         </div>
       </main>
-
-      <footer className="py-4 px-4 sm:px-6 lg:px-8 bg-white border-t border-gray-200 z-0"> {/* Changed z-10 to z-0 */}
+      <footer className="py-4 px-4 sm:px-6 lg:px-8 bg-white border-t border-gray-200 z-0">
+        {" "}
+        {/* Changed z-10 to z-0 */}
         <div className="max-w-7xl mx-auto text-center text-sm text-gray-500">
           © {new Date().getFullYear()} WEXLINKS. Tous droits réservés.
         </div>
